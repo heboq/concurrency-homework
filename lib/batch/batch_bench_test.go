@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_getButch(t *testing.T) {
+func Benchmark_getButch(b *testing.B) {
 	type args struct {
 		n    int64
 		pool int64
@@ -25,21 +25,21 @@ func Test_getButch(t *testing.T) {
 		{args: args{n: 35, pool: 5}, wantRes: createRes(35)},
 	}
 	for _, tt := range tests {
-		t.Run("", func(t *testing.T) {
+		b.Run("", func(b *testing.B) {
 			start := time.Now()
 			wantTime := start.Add(time.Duration(tt.args.n/tt.args.pool) * 100)
 			actualRes := getBatch(tt.args.n, tt.args.pool)
 			since := time.Since(start).Milliseconds()
-			assert.WithinDuration(t, wantTime, start.Add(time.Duration(since)), time.Nanosecond*200)
-			assert.ElementsMatch(t, tt.wantRes, actualRes)
+			assert.WithinDuration(b, wantTime, start.Add(time.Duration(since)), time.Nanosecond*200)
+			assert.ElementsMatch(b, tt.wantRes, actualRes)
 		})
 	}
 }
 
-func createRes(v int64) []user {
-	res := make([]user, 0, v)
-	for i := 0; i < int(v); i++ {
-		res = append(res, user{ID: int64(i)})
-	}
-	return res
-}
+// func createRes(v int64) []user {
+// 	res := make([]user, 0, v)
+// 	for i := 0; i < int(v); i++ {
+// 		res = append(res, user{ID: int64(i)})
+// 	}
+// 	return res
+// }

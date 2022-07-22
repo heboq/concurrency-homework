@@ -21,13 +21,13 @@ func getBatch(n int64, pool int64) (res []user) {
 	wg.Add(int(n))
 	for i := int64(0); i < n; i++ {
 		go func(i int64) {
+			defer wg.Done()
 			sem <- struct{}{}
 			user := getOne(i)
 			mu.Lock()
 			res = append(res, user)
 			mu.Unlock()
 			<-sem
-			wg.Done()
 		}(i)
 	}
 	wg.Wait()
